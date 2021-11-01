@@ -14,6 +14,8 @@ public class BallController : MonoBehaviour
     // Titik asal lintasan bola saat ini
     //private Vector2 trajectoryOrigin;
 
+    Vector3 lastVelocity;
+
 
     // Start is called before the first frame update
     void Start()
@@ -29,7 +31,14 @@ public class BallController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        lastVelocity = rigidBody2D.velocity;
+    }
+
+    private void OnCollisionEnter2D(Collision2D col) {
+        var speed = lastVelocity.magnitude;
+        var direction = Vector3.Reflect(lastVelocity.normalized, col.contacts[0].normal);
+
+        rigidBody2D.velocity = direction * Mathf.Max(speed, 2f);
     }
 
     void ResetBall()
